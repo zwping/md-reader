@@ -10,6 +10,8 @@ https://md-reader.github.io
 
 Markdown Reader 是一款强大的浏览器扩展程序，能让你在浏览器中快捷的预览 Markdown 文档。
 
+> 本仓库是 Markdown Reader 2.x 的持续维护分支。下方应用商店链接指向上游扩展；如需使用本仓库版本，请按「本地构建」步骤安装。
+
 - **文档格式**: 支持预览 `file://`、`http://`、`https://` 协议以及 `.md`、`.mkd`、`.mdx`、`.markdown` 等扩展名的文件:
   - `https://example.com/example.md`（在线 Markdown 链接）
   - `file:///Users/my-project/readme.markdown`（本地 Markdown 文件，[\*需要开启特定权限](#允许本地文件访问权限)）
@@ -27,6 +29,8 @@ Markdown Reader 是一款强大的浏览器扩展程序，能让你在浏览器�
 
 ### A. 在浏览器应用商店安装（需要机智上网）
 
+应用商店中的版本属于上游项目，并非本仓库构建版本。要使用本分支，请按「本地构建」步骤加载。
+
 <a href="https://chromewebstore.google.com/detail/md-reader/medapdbncneneejhbgcjceippjlfkmkg" target="_blank"><img src="./src/images/Chrome.png" style="width:50px"/></a>
 <a href="https://microsoftedge.microsoft.com/addons/detail/markdown-reader/djnplooklihmkcioemdjfcednfkpiodc" target="_blank"><img src="./src/images/Edge.png" style="width:50px"/></a>
 <a href="https://addons.mozilla.org/firefox/addon/markdown-reader-ext/" target="_blank"><img src="./src/images/Firefox.png" style="width:50px"/></a>
@@ -40,7 +44,7 @@ Markdown Reader 是一款强大的浏览器扩展程序，能让你在浏览器�
 
    ```bash
    # 克隆本仓库
-   git clone https://github.com/md-reader/md-reader.git && cd md-reader
+   git clone https://github.com/zwping/md-reader.git && cd md-reader
 
    # 安装依赖
    pnpm install
@@ -49,9 +53,9 @@ Markdown Reader 是一款强大的浏览器扩展程序，能让你在浏览器�
    pnpm build
    ```
 
-2. 构建成功后，`md-reader/dist` 文件夹会生成 `md-reader-xxx.zip` 扩展程序包。
+2. 构建成功后，`extension` 文件夹中是可直接加载的扩展程序，`dist` 文件夹中会生成 ZIP 安装包。
 
-3. 进入 Chrome 的扩展管理页，将扩展程序拖拽进浏览器即可安装。
+3. 本地加载时，打开 `chrome://extensions`，启用右上角的「开发者模式」，点击「加载已解压的扩展程序」，选择 `extension` 文件夹。
 
 ## 使用
 
@@ -64,6 +68,27 @@ Markdown Reader 是一款强大的浏览器扩展程序，能让你在浏览器�
 > 由于 Chrome 出于安全考虑，默认关闭了扩展程序对本地文件的访问权限，所以在安装完插件后需要手动开启权限，这样就可以正常预览本地 markdown 文件了。
 
 在 Chrome 扩展程序管理页中，找到刚刚安装的 `Markdown Reader`，点击 `详细信息`，在详情页找到 `允许访问文件网址` 选项，然后切换为开启状态即可（请放心：`Markdown Reader` 只对 markdown 文件进行读取和展示的操作，不会修改和上传用户文件数据）。
+
+### 打开 Markdown 文档
+
+在 Chrome 中打开支持的 Markdown 网页链接或本地文件，也可以将 Markdown 文件拖入浏览器。本地文件需要先开启上面的「允许访问文件网址」权限，开启后刷新文档标签页。
+
+### 设置扩展
+
+点击 Chrome 工具栏中的 Markdown Reader 图标打开设置弹窗。设置会自动保存：
+
+- **启用**：开启或关闭 Markdown 渲染。
+- **内容居中**：切换文档内容是否居中显示。
+- **自动刷新**：源文件变更时自动重新载入渲染结果。
+- **插件**：选择要启用的 Markdown 语法功能。
+- **主题**：选择浅色、深色或跟随系统。
+- **语言**：切换扩展界面语言。
+
+### 阅读文档
+
+使用左侧目录跳转到对应标题。页面上的悬浮按钮可以显示或隐藏目录、切换渲染文档与原始 Markdown、返回页面顶部。
+
+默认快捷键：**Alt+Shift+B**（切换目录）、**Alt+Shift+C**（切换居中）、**Alt+Shift+R**（切换自动刷新）、**Alt+Shift+T**（切换主题）。可在 `chrome://extensions/shortcuts` 查看或修改快捷键。
 
 <br/>
 
