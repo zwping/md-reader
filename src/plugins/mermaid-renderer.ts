@@ -195,7 +195,41 @@ document.addEventListener('keydown', event => {
     if (wrapper) {
       setMermaidFullscreen(wrapper, false)
     }
+    return
   }
+
+  if (event.altKey || event.ctrlKey || event.metaKey) {
+    return
+  }
+
+  const wrapper = document.querySelector<HTMLElement>(`.${FULLSCREEN_CLASS}`)
+  if (!wrapper) {
+    return
+  }
+
+  const target = event.target
+  if (
+    target instanceof Element &&
+    target.closest('input, textarea, select, [contenteditable="true"]')
+  ) {
+    return
+  }
+
+  const zoomIn = event.key === 'ArrowUp' || event.key === '+'
+  const zoomOut = event.key === 'ArrowDown' || event.key === '-'
+  if (!zoomIn && !zoomOut) {
+    return
+  }
+
+  event.preventDefault()
+  const currentZoom = Number(wrapper.dataset.zoom) || 1
+  wrapper.dataset.zoom = String(
+    Math.min(
+      MAX_ZOOM,
+      Math.max(MIN_ZOOM, currentZoom * (zoomIn ? ZOOM_STEP : 1 / ZOOM_STEP)),
+    ),
+  )
+  syncMermaidZoom()
 })
 
 function setupMermaidControls(wrapper: HTMLElement) {
