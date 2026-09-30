@@ -215,8 +215,8 @@ document.addEventListener('keydown', event => {
     return
   }
 
-  const zoomIn = event.key === 'ArrowUp' || event.key === '+'
-  const zoomOut = event.key === 'ArrowDown' || event.key === '-'
+  const zoomIn = ['ArrowUp', '+', 'w', 'W'].includes(event.key)
+  const zoomOut = ['ArrowDown', '-', 's', 'S'].includes(event.key)
   if (!zoomIn && !zoomOut) {
     return
   }

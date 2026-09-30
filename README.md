@@ -16,7 +16,7 @@ Markdown Reader is a powerful browser extension that enables you to conveniently
 
 - Mermaid 升级至 **11.17.0**，支持 ER 图和 Mermaid 子图语法。
 - Mermaid 图表适配阅读器的浅色、深色和自动主题。
-- 增加图表缩放、鼠标滚轮缩放、拖动平移、重置和全屏；退出全屏后恢复普通视图。
+- 增加图表缩放、鼠标滚轮缩放、拖动平移、重置和全屏；全屏时支持键盘缩放（↑ / W / + 放大，↓ / S / - 缩小），退出全屏后恢复普通视图。
 
 - **Document Formats**: Preview links in `file://`, `http://`, `https://` and files with `.md`, `.mkd`, `.mdx`, `.markdown` extensions:
   - `https://example.com/example.md` (online Markdown URL)
