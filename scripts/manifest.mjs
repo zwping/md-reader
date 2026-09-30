@@ -10,6 +10,7 @@ try {
     `📃[update manifest version]: ${manifest.version} ==> ${(manifest.version =
       newVersion)}`,
   )
+  manifest.version_name = newVersion
   await fs.writeFile(
     manifestPath,
     prettier.format(JSON.stringify(manifest, null, 2), { parser: 'json' }),

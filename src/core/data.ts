@@ -20,7 +20,7 @@ export function getDefaultData(mergeData: Data = {}): Data {
     hiddenSide: false,
     language: i18n().locale,
     mdPlugins: [...MD_PLUGINS],
-    pageTheme: PAGE_THEMES[0],
+    pageTheme: 'auto',
     ...mergeData,
   }
 }
