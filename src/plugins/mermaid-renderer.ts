@@ -12,6 +12,20 @@ const ZOOM_STEP = 1.25
 const FULLSCREEN_CLASS = `${MERMAID_CLASS}--fullscreen`
 const INTERACTIVE_CLASS = `${MERMAID_CLASS}--interactive`
 const FULLSCREEN_BODY_CLASS = 'md-reader--mermaid-fullscreen'
+const NODE_PALETTE = [
+  '#e879f9',
+  '#2dd4bf',
+  '#fb923c',
+  '#22d3ee',
+  '#4ade80',
+  '#a78bfa',
+  '#f87171',
+  '#facc15',
+  '#818cf8',
+  '#a3e635',
+  '#38bdf8',
+  '#fb7185',
+]
 const fullscreenLocations = new WeakMap<
   HTMLElement,
   { placeholder: Comment; parent: Node; nextSibling: Node | null }
@@ -444,6 +458,35 @@ function appendRenderError(element: HTMLElement, error: unknown) {
   element.appendChild(errorElement)
 }
 
+function applyMermaidNodePalette(wrapper: HTMLElement) {
+  wrapper
+    .querySelectorAll<SVGSVGElement>(`.${MERMAID_CLASS}__viewport svg`)
+    .forEach(svg => {
+      svg.querySelectorAll<SVGGElement>('g.node').forEach((node, index) => {
+        const colorIndex = Number(node.dataset.colorId?.replace('color-', ''))
+        const color =
+          NODE_PALETTE[
+            Number.isInteger(colorIndex) && colorIndex >= 0
+              ? colorIndex % NODE_PALETTE.length
+              : index % NODE_PALETTE.length
+          ]
+        const shapes = node.querySelectorAll<SVGElement>(
+          'rect, path, polygon, ellipse, circle',
+        )
+        shapes.forEach(shape => {
+          shape.style.setProperty('stroke', color, 'important')
+          shape.style.setProperty('stroke-width', '1.5px', 'important')
+        })
+      })
+
+      svg.querySelectorAll<SVGElement>('.entityBox').forEach((shape, index) => {
+        const color = NODE_PALETTE[index % NODE_PALETTE.length]
+        shape.style.setProperty('stroke', color, 'important')
+        shape.style.setProperty('stroke-width', '1.5px', 'important')
+      })
+    })
+}
+
 export async function renderMermaid(container: ParentNode = document) {
   const wrappers = Array.from(
     container.querySelectorAll<HTMLElement>(`.${MERMAID_CLASS}`),
@@ -461,12 +504,103 @@ export async function renderMermaid(container: ParentNode = document) {
       wrapper.querySelector<HTMLElement>('.mermaid')?.textContent || ''
   })
 
-  const theme = wrappers[0].dataset.theme === 'dark' ? 'dark' : 'default'
-  mermaid.initialize({ startOnLoad: false, securityLevel: 'strict', theme })
+  mermaid.initialize({
+    startOnLoad: false,
+    securityLevel: 'strict',
+    theme: 'base',
+    look: 'neo',
+    flowchart: {
+      nodeSpacing: 28,
+      rankSpacing: 32,
+      diagramPadding: 8,
+    },
+    sequence: {
+      actorMargin: 36,
+      diagramMarginX: 20,
+      diagramMarginY: 18,
+      messageMargin: 20,
+      noteMargin: 10,
+    },
+    er: {
+      theme: 'redux-dark-color',
+      look: 'neo',
+      nodeSpacing: 28,
+      rankSpacing: 24,
+      diagramPadding: 8,
+      entityPadding: 5,
+      minEntityWidth: 82,
+      minEntityHeight: 38,
+    },
+    themeVariables: {
+      background: '#050b19',
+      primaryColor: '#101b2d',
+      primaryTextColor: '#e8edf7',
+      primaryBorderColor: '#55d6d0',
+      secondaryColor: '#171329',
+      secondaryTextColor: '#e8edf7',
+      secondaryBorderColor: '#bd70e8',
+      tertiaryColor: '#111b2c',
+      tertiaryTextColor: '#e8edf7',
+      tertiaryBorderColor: '#f0b44d',
+      lineColor: '#9aa8bf',
+      textColor: '#e8edf7',
+      mainBkg: '#101b2d',
+      nodeBorder: '#55d6d0',
+      clusterBkg: 'rgba(28, 25, 48, 0.72)',
+      clusterBorder: '#746f8d',
+      defaultLinkColor: '#aeb9ce',
+      edgeLabelBackground: '#0b1120',
+      titleColor: '#e8edf7',
+      attributeBackgroundColorOdd: '#cbd8ed',
+      attributeBackgroundColorEven: '#182943',
+      attributeTextColorOdd: '#f4f7fc',
+      attributeTextColorEven: '#e8edf7',
+      actorBkg: '#101b2d',
+      actorBorder: '#55d6d0',
+      actorTextColor: '#e8edf7',
+      signalColor: '#dce4f2',
+      signalTextColor: '#e8edf7',
+      labelBoxBkgColor: '#0b1120',
+      labelBoxBorderColor: '#746f8d',
+      labelTextColor: '#e8edf7',
+      noteBkgColor: '#171329',
+      noteBorderColor: '#bd70e8',
+      noteTextColor: '#e8edf7',
+      activationBkgColor: '#1c3850',
+      activationBorderColor: '#55d6d0',
+      cScale0: '#e879f9',
+      cScale1: '#2dd4bf',
+      cScale2: '#fb923c',
+      cScale3: '#22d3ee',
+      cScale4: '#4ade80',
+      cScale5: '#a78bfa',
+      cScale6: '#f87171',
+      cScale7: '#facc15',
+      cScale8: '#818cf8',
+      cScale9: '#a3e635',
+      cScale10: '#38bdf8',
+      cScale11: '#fb7185',
+      pie1: '#55d6d0',
+      pie2: '#bd70e8',
+      pie3: '#f0b44d',
+      pie4: '#72a7ff',
+      pie5: '#f07878',
+      pie6: '#65d49a',
+      pie7: '#e68bd7',
+      pie8: '#a9c85c',
+      pie9: '#42c6ee',
+      pie10: '#ff9b60',
+      pie11: '#9a83ff',
+      pie12: '#f4d35e',
+    },
+  })
 
   try {
     await mermaid.run({ nodes: diagrams })
-    wrappers.forEach(setupMermaidControls)
+    wrappers.forEach(wrapper => {
+      applyMermaidNodePalette(wrapper)
+      setupMermaidControls(wrapper)
+    })
   } catch (error) {
     wrappers.forEach(wrapper => appendRenderError(wrapper, error))
   }

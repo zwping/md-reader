@@ -180,13 +180,21 @@ body.md-reader {
           }
         }
         .md-reader__mermaid {
+          --mermaid-canvas: #050b19;
           position: relative;
           margin: 16px 0;
           overflow: hidden;
-          border: 1px solid var(--color-border);
-          border-radius: 8px;
-          background: var(--color-bg);
-          color: var(--color-text-primary);
+          border: 1px solid rgba(142, 151, 179, 0.42);
+          border-radius: 6px;
+          background-color: var(--mermaid-canvas);
+          background-image: radial-gradient(
+            circle,
+            rgba(115, 129, 158, 0.18) 2.5px,
+            transparent 3px
+          );
+          background-position: 15px 15px;
+          background-size: 53px 53px;
+          color: #e8edf7;
           padding-bottom: 0;
 
           &__viewport {
@@ -218,6 +226,7 @@ body.md-reader {
             display: block;
             flex: none;
             margin: 0;
+            background: transparent !important;
             cursor: inherit;
             pointer-events: none;
             touch-action: none;
@@ -330,6 +339,15 @@ body.md-reader {
       background: var(--color-modal-bg);
       backdrop-filter: blur(10px);
 
+      background-color: #050b19;
+      background-image: radial-gradient(
+        circle,
+        rgba(115, 129, 158, 0.18) 2.5px,
+        transparent 3px
+      );
+      background-position: 15px 15px;
+      background-size: 53px 53px;
+
       .md-reader__mermaid__viewport {
         position: absolute;
         inset: 24px;
@@ -345,6 +363,7 @@ body.md-reader {
           display: block;
           flex: none;
           margin: 0;
+          background: transparent !important;
         }
       }
 
