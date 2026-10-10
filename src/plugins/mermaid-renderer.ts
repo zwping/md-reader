@@ -4,6 +4,7 @@ import {
   MERMAID_CONTROLS_CLASS,
   MERMAID_ERROR_CLASS,
 } from '@/core/mermaid'
+import { writeText } from '@/shared'
 
 const MIN_ZOOM = 0.25
 const MAX_ZOOM = 5
@@ -404,6 +405,25 @@ function setupMermaidControls(wrapper: HTMLElement) {
           case 'fullscreen':
             setMermaidFullscreen(wrapper, !isMermaidFullscreen(wrapper))
             break
+          case 'copy-source':
+            void writeText(wrapper.dataset.mermaidSource || '')
+              .then(() => {
+                button.classList.add('copied')
+                button.title = '已复制 Mermaid 源码'
+                button.setAttribute('aria-label', '已复制 Mermaid 源码')
+              })
+              .catch(() => {
+                button.title = '复制失败'
+                button.setAttribute('aria-label', '复制失败')
+              })
+              .finally(() => {
+                setTimeout(() => {
+                  button.classList.remove('copied')
+                  button.title = '复制 Mermaid 源码'
+                  button.setAttribute('aria-label', '复制 Mermaid 源码')
+                }, 1000)
+              })
+            break
         }
       })
     })
@@ -435,6 +455,11 @@ export async function renderMermaid(container: ParentNode = document) {
   if (!diagrams.length) {
     return
   }
+
+  wrappers.forEach(wrapper => {
+    wrapper.dataset.mermaidSource =
+      wrapper.querySelector<HTMLElement>('.mermaid')?.textContent || ''
+  })
 
   const theme = wrappers[0].dataset.theme === 'dark' ? 'dark' : 'default'
   mermaid.initialize({ startOnLoad: false, securityLevel: 'strict', theme })

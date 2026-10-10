@@ -5,7 +5,16 @@ export const MERMAID_CONTROLS_CLASS = 'mdr-mermaid-controls'
 export const MERMAID_ERROR_CLASS = 'md-reader__mermaid-error'
 
 const controlsMarkup = `
-  <div class="mdr-mermaid-controls" role="toolbar" aria-label="ER 图控制">
+  <div class="mdr-mermaid-controls" role="toolbar" aria-label="Mermaid 图表控制">
+    <button type="button" class="mdr-button" data-panzoom-action="copy-source" aria-label="复制 Mermaid 源码" title="复制 Mermaid 源码">
+      <svg class="icon-copy" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="8" y="8" width="13" height="13" rx="2"></rect>
+        <path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"></path>
+      </svg>
+      <svg class="icon-success" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="m5 12 4 4L19 6"></path>
+      </svg>
+    </button>
     <button type="button" class="mdr-button" data-panzoom-action="zoom-out" aria-label="缩小（↓ / S / -）" title="缩小（↓ / S / -）">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30">
         <path d="M13.851234,2Q18.760178,2,22.231323,5.4711461Q25.702469,8.9422922,25.702469,13.851234Q25.702469,18.085938,23.11936,21.250681L27.568743,25.700012C27.843466,25.950647,28,26.305344,28,26.677219C28,27.407772,27.407772,28,26.677221,28C26.305351,28,25.950657,27.843472,25.700024,27.568752L21.250624,23.119406Q18.085897,25.702473,13.851234,25.702473Q8.9422927,25.702471,5.4711463,22.231323Q2.00000059070817,18.760176,2,13.851233Q2.0000016539828,8.9422927,5.4711473,5.4711466Q8.9422932,2.00000023628328,13.851234,2ZM13.851234,4.6427838999999995Q10.0369711,4.6427841,7.3398776,7.3398776Q4.6427853,10.0369701,4.6427836,13.851233Q4.6427838999999995,17.665501,7.3398767,20.362593Q10.0369682,23.059685,13.851234,23.059687Q17.6655,23.059687,20.362595,20.362593Q23.059685,17.665502,23.059685,13.851234Q23.059685,10.0369673,20.362595,7.3398767Q17.665502,4.6427838999999995,13.851234,4.6427838999999995ZM10.13482,15.174012C10.1550179,15.174012,10.1752129,15.173551,10.1953897,15.172625L17.507078999999997,15.172625C17.527256,15.173551,17.547449999999998,15.174012,17.567649,15.174012C18.298201,15.174012,18.890429,14.581784,18.890429,13.851233C18.890429,13.120682,18.298201,12.528454,17.567649,12.528454C17.547449999999998,12.528454,17.527256,12.528916,17.507078999999997,12.529841L10.1953897,12.529841C10.1752129,12.528916,10.1550179,12.528454,10.13482,12.528454C9.4042692,12.528454,8.8120408,13.120682,8.8120408,13.851233C8.8120408,14.581784,9.4042692,15.174012,10.13482,15.174012Z" stroke="none" fill="currentColor"></path>
