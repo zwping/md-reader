@@ -1,0 +1,3 @@
+export const MERMAID_MAX_ZOOM_DEFAULT = 20
+export const MERMAID_MAX_ZOOM_MIN = 1
+export const MERMAID_MAX_ZOOM_LIMIT = 20

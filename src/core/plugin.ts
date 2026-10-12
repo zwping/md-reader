@@ -19,9 +19,16 @@ export function usePlugin(plugin: Plugin | Array<Plugin>) {
   }
 }
 
-export function initPlugins({ event }: { event: Event }) {
+export function initPlugins({
+  event,
+  config,
+}: {
+  event: Event
+  config?: Record<string, any>
+}) {
   const ctx: Ctx = {
     event,
+    config,
   }
   plugins.forEach(p => p(ctx))
 }

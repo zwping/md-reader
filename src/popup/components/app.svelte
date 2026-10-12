@@ -9,6 +9,11 @@
   import Chip, { Set, Text } from '@smui/chips'
   import MD_PLUGINS from '@/config/md-plugins'
   import PAGE_THEMES from '@/config/page-themes'
+  import {
+    MERMAID_MAX_ZOOM_DEFAULT,
+    MERMAID_MAX_ZOOM_LIMIT,
+    MERMAID_MAX_ZOOM_MIN,
+  } from '@/config/mermaid'
   import { getDefaultData, type Data } from '@/core/data'
   import pkg from '../../../package.json'
   import i18n from '@/config/i18n'
@@ -37,6 +42,17 @@
     setTimeout(() => {
       chrome.runtime.sendMessage({ action: 'storage', data: { key, value } })
     }, 0)
+  }
+
+  function updateMaxZoom() {
+    data.mermaidMaxZoom = Math.min(
+      MERMAID_MAX_ZOOM_LIMIT,
+      Math.max(
+        MERMAID_MAX_ZOOM_MIN,
+        Number(data.mermaidMaxZoom) || MERMAID_MAX_ZOOM_DEFAULT,
+      ),
+    )
+    updateConfig('mermaidMaxZoom', data.mermaidMaxZoom)
   }
 
   function changeLocale(language) {
@@ -106,6 +122,24 @@
       </Set>
     </div>
 
+    <div class="form-item zoom-setting">
+      <label class="label-item" for="mermaid-max-zoom">
+        {localize('label_mermaid_max_zoom')}:
+      </label>
+      <div class="zoom-input">
+        <input
+          id="mermaid-max-zoom"
+          type="number"
+          min={MERMAID_MAX_ZOOM_MIN}
+          max={MERMAID_MAX_ZOOM_LIMIT}
+          step="0.5"
+          bind:value={data.mermaidMaxZoom}
+          on:change={updateMaxZoom}
+        />
+        <span>×</span>
+      </div>
+    </div>
+
     <div class="form-item">
       <div class="label-item">{localize('label_theme')}:</div>
       {#each PAGE_THEMES as mode}
@@ -156,5 +190,24 @@
     font-weight: bolder;
     font-size: 13px;
     color: #243158e3;
+  }
+  .zoom-setting {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 16px 0;
+  }
+  .zoom-input {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .zoom-input input {
+    width: 76px;
+    padding: 6px 8px;
+    border: 1px solid #aeb7cc;
+    border-radius: 5px;
+    font: inherit;
   }
 </style>

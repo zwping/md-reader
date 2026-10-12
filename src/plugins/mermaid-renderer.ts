@@ -4,10 +4,15 @@ import {
   MERMAID_CONTROLS_CLASS,
   MERMAID_ERROR_CLASS,
 } from '@/core/mermaid'
+import {
+  MERMAID_MAX_ZOOM_DEFAULT,
+  MERMAID_MAX_ZOOM_LIMIT,
+  MERMAID_MAX_ZOOM_MIN,
+} from '@/config/mermaid'
 import { writeText } from '@/shared'
 
 const MIN_ZOOM = 0.25
-const MAX_ZOOM = 5
+let maxZoom = MERMAID_MAX_ZOOM_DEFAULT
 const ZOOM_STEP = 1.25
 const FULLSCREEN_CLASS = `${MERMAID_CLASS}--fullscreen`
 const INTERACTIVE_CLASS = `${MERMAID_CLASS}--interactive`
@@ -240,7 +245,7 @@ document.addEventListener('keydown', event => {
   const currentZoom = Number(wrapper.dataset.zoom) || 1
   wrapper.dataset.zoom = String(
     Math.min(
-      MAX_ZOOM,
+      maxZoom,
       Math.max(MIN_ZOOM, currentZoom * (zoomIn ? ZOOM_STEP : 1 / ZOOM_STEP)),
     ),
   )
@@ -286,7 +291,7 @@ function setupMermaidControls(wrapper: HTMLElement) {
 
         const currentZoom = Number(wrapper.dataset.zoom) || 1
         const nextZoom = Math.min(
-          MAX_ZOOM,
+          maxZoom,
           Math.max(
             MIN_ZOOM,
             currentZoom * (event.deltaY < 0 ? ZOOM_STEP : 1 / ZOOM_STEP),
@@ -395,7 +400,7 @@ function setupMermaidControls(wrapper: HTMLElement) {
           case 'zoom-in':
             wrapper.dataset.zoom = String(
               Math.min(
-                MAX_ZOOM,
+                maxZoom,
                 (Number(wrapper.dataset.zoom) || 1) * ZOOM_STEP,
               ),
             )
@@ -606,7 +611,33 @@ export async function renderMermaid(container: ParentNode = document) {
   }
 }
 
-export default function MermaidRendererPlugin({ event }) {
+export default function MermaidRendererPlugin({ event, config }) {
+  const configuredMaxZoom = Number(config?.mermaidMaxZoom)
+  maxZoom =
+    Number.isFinite(configuredMaxZoom) &&
+    configuredMaxZoom >= MERMAID_MAX_ZOOM_MIN &&
+    configuredMaxZoom <= MERMAID_MAX_ZOOM_LIMIT
+      ? configuredMaxZoom
+      : MERMAID_MAX_ZOOM_DEFAULT
+
+  event.on('mermaidMaxZoomChanged', (value: number) => {
+    const configuredValue = Number(value)
+    maxZoom =
+      Number.isFinite(configuredValue) &&
+      configuredValue >= MERMAID_MAX_ZOOM_MIN
+        ? Math.min(configuredValue, MERMAID_MAX_ZOOM_LIMIT)
+        : MERMAID_MAX_ZOOM_DEFAULT
+    document
+      .querySelectorAll<HTMLElement>(`.${MERMAID_CLASS}`)
+      .forEach(wrapper => {
+        const currentZoom = Number(wrapper.dataset.zoom) || 1
+        if (currentZoom > maxZoom) {
+          wrapper.dataset.zoom = String(maxZoom)
+        }
+      })
+    syncMermaidZoom()
+  })
+
   event.on('contentRendered', (container: HTMLElement) => {
     void renderMermaid(container)
   })

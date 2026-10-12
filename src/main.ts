@@ -69,7 +69,15 @@ function main(data: Data) {
   let isSideHover: boolean = false
   let globalEvent: Event = new Event()
 
-  initPlugins({ event: globalEvent })
+  initPlugins({ event: globalEvent, config: configData })
+  chrome.storage.onChanged.addListener((changes, areaName) => {
+    if (areaName !== 'local' || !changes.mermaidMaxZoom) {
+      return
+    }
+
+    configData.mermaidMaxZoom = changes.mermaidMaxZoom.newValue
+    globalEvent.emit('mermaidMaxZoomChanged', configData.mermaidMaxZoom)
+  })
 
   /* init md page */
   setTheme(configData.pageTheme)
